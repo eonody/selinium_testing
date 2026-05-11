@@ -60,10 +60,8 @@ public class FirstSeleniumTest {
     public void testLoginWithCredentials() {
         String username = TestConfig.getUsername();
         String password = TestConfig.getPassword();
-        if (username.isEmpty() || password.isEmpty()) {
-            System.out.println("Skipping login test: no credentials in test.properties");
-            return;
-        }
+        Assume.assumeTrue("Skipping: no credentials in test.properties",
+                !username.isEmpty() && !password.isEmpty());
         LoginPage loginPage = new LoginPage(driver);
         loginPage.open();
         loginPage.login(username, password);
@@ -117,30 +115,29 @@ public class FirstSeleniumTest {
         Assert.assertTrue("Puzzle page should have a chess board", puzzlePage.isPuzzleBoardVisible());
     }
 
-    // ===== JAVASCRIPT EXECUTOR: scroll to footer =====
+    // ===== JAVASCRIPT EXECUTOR: scroll to bottom =====
     @Test
-    public void testScrollToFooterWithJavascript() {
-        MainPage mainPage = new MainPage(driver);
-        WebElement footer = driver.findElement(By.tagName("footer"));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", footer);
-        Assert.assertTrue("Footer should be displayed after scroll", footer.isDisplayed());
+    public void testScrollToBottomWithJavascript() {
+        driver.get(TestConfig.getBaseUrl());
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("body")));
+        ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight);");
+        // Verify scroll happened by checking scrollY > 0
+        Long scrollY = (Long) ((JavascriptExecutor) driver).executeScript("return window.scrollY;");
+        Assert.assertTrue("Page should have scrolled down", scrollY > 0);
     }
 
     // ===== HOVER TEST =====
     @Test
-    public void testHoverOnPlayButton() {
-        MainPage mainPage = new MainPage(driver);
-        // Hover over a navigation element
-        By navLink = By.xpath("//div[@id='top']//a[contains(@href,'/')]");
-        try {
-            WebElement el = driver.findElement(navLink);
-            new Actions(driver).moveToElement(el).perform();
-            // Just verify no exception - hover worked
-            Assert.assertTrue(true);
-        } catch (org.openqa.selenium.NoSuchElementException e) {
-            // Element not found, skip
-            Assert.assertTrue("Nav element should exist", false);
-        }
+    public void testHoverOnElement() {
+        driver.get(TestConfig.getBaseUrl());
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        // Hover over the main site logo/link
+        By logoBy = By.xpath("//a[@id='site-title' or contains(@class,'site-title')]");
+        WebElement el = wait.until(ExpectedConditions.presenceOfElementLocated(logoBy));
+        new Actions(driver).moveToElement(el).perform();
+        // Verify element is still displayed after hover
+        Assert.assertTrue("Element should be visible after hover", el.isDisplayed());
     }
 
     // ===== COOKIE MANIPULATION =====

@@ -4,9 +4,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 class LoginPage extends PageBase {
 
     // Complex XPath for username field inside the login form
-    private By usernameBy = By.xpath("//form[@action='/login']//input[@name='username' and @type='text']");
-    private By passwordBy = By.xpath("//form[@action='/login']//input[@name='password' and @type='password']");
-    private By submitBy = By.xpath("//form[@action='/login']//button[@type='submit']");
+    private By usernameBy = By.xpath("//form[contains(@action,'login')]//input[@autocomplete='username']");
+    private By passwordBy = By.xpath("//form[contains(@action,'login')]//input[@autocomplete='current-password']");
+    private By submitBy = By.xpath("//form[contains(@action,'login')]//button[@type='submit']");
 
     public LoginPage(WebDriver driver) {
         super(driver);
@@ -27,8 +27,9 @@ class LoginPage extends PageBase {
 
     public boolean isLoginFormDisplayed() {
         try {
+            wait.until(ExpectedConditions.presenceOfElementLocated(usernameBy));
             return driver.findElement(usernameBy).isDisplayed();
-        } catch (NoSuchElementException e) {
+        } catch (Exception e) {
             return false;
         }
     }
