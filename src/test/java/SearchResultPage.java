@@ -4,6 +4,7 @@ import java.util.List;
 
 class SearchResultPage extends PageBase {
 
+    private By searchToggleBy = By.xpath("//div[@class='site-buttons']//div[@id='clinput']//a[contains(@class,'link')]");
     private By searchInputBy = By.xpath("//div[@class='site-buttons']//div[@id='clinput']//input");
     private By searchResultsBy = By.xpath("//div[contains(@class,'complete-list')]//a[contains(@href,'/@/')]");
     private By noResultBy = By.xpath("//div[contains(@class,'complete-list')]//div[contains(@class,'empty')]");
@@ -18,8 +19,8 @@ class SearchResultPage extends PageBase {
     }
 
     public SearchResultPage searchForPlayer(String query) {
+        waitAndClickable(searchToggleBy).click();
         WebElement input = waitAndReturnElement(searchInputBy);
-        input.click();
         input.clear();
         input.sendKeys(query);
         wait.until(ExpectedConditions.or(

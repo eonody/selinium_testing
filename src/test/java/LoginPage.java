@@ -21,7 +21,13 @@ class LoginPage extends PageBase {
         waitAndReturnElement(usernameBy).sendKeys(username);
         waitAndReturnElement(passwordBy).clear();
         waitAndReturnElement(passwordBy).sendKeys(password);
-        waitAndClickable(submitBy).click();
+        WebElement submitBtn = wait.until(ExpectedConditions.presenceOfElementLocated(submitBy));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", submitBtn);
+        try {
+            waitAndClickable(submitBy).click();
+        } catch (Exception e) {
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", submitBtn);
+        }
     }
 
     public boolean isLoginFormDisplayed() {
