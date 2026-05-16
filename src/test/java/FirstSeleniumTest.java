@@ -12,6 +12,7 @@ import java.io.File;
 import java.net.URL;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
+import java.time.Duration;
 import java.util.*;
 
 public class FirstSeleniumTest {
@@ -66,7 +67,7 @@ public class FirstSeleniumTest {
         loginPage.open();
         loginPage.login(username, password);
 
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/login")));
         Assert.assertFalse(driver.getCurrentUrl().contains("/login"));
     }
@@ -119,7 +120,7 @@ public class FirstSeleniumTest {
     @Test
     public void testScrollToBottomWithJavascript() {
         driver.get(TestConfig.getBaseUrl());
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("body")));
         ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight);");
 
@@ -131,12 +132,12 @@ public class FirstSeleniumTest {
     @Test
     public void testHoverOnElement() {
         driver.get(TestConfig.getBaseUrl());
-        WebDriverWait wait = new WebDriverWait(driver, 10);
-        // Hover over the main site logo/link
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
         By logoBy = By.xpath("//a[@id='site-title' or contains(@class,'site-title')]");
         WebElement el = wait.until(ExpectedConditions.presenceOfElementLocated(logoBy));
         new Actions(driver).moveToElement(el).perform();
-        // Verify element is still displayed after hover
+
         Assert.assertTrue("Element should be visible after hover", el.isDisplayed());
     }
 
@@ -170,7 +171,7 @@ public class FirstSeleniumTest {
 
         driver.navigate().back();
 
-        WebDriverWait wait = new WebDriverWait(driver, 5);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/about")));
 
         driver.navigate().forward();
@@ -182,7 +183,7 @@ public class FirstSeleniumTest {
     @Test
     public void testExplicitWaitForElement() {
         driver.get(TestConfig.getBaseUrl());
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         WebElement body = wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("body")));
         Assert.assertNotNull("Body should be visible after wait", body);
     }
@@ -227,7 +228,7 @@ public class FirstSeleniumTest {
         LoginPage loginPage = new LoginPage(driver);
         loginPage.open();
         loginPage.login(username, password);
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/login")));
 
         MainPage mainPage = new MainPage(driver);
@@ -245,7 +246,7 @@ public class FirstSeleniumTest {
         LoginPage loginPage = new LoginPage(driver);
         loginPage.open();
         loginPage.login(username, password);
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/login")));
 
         ProfilePage profilePage = new ProfilePage(driver);
@@ -268,7 +269,7 @@ public class FirstSeleniumTest {
         LoginPage loginPage = new LoginPage(driver);
         loginPage.open();
         loginPage.login(username, password);
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/login")));
 
         ReportPage reportPage = new ReportPage(driver);
@@ -289,7 +290,7 @@ public class FirstSeleniumTest {
         LoginPage loginPage = new LoginPage(driver);
         loginPage.open();
         loginPage.login(username, password);
-        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/login")));
 
         PreferencesPage prefsPage = new PreferencesPage(driver);
