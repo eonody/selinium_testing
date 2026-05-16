@@ -1,4 +1,5 @@
 import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 class AboutPage extends PageBase {
 
@@ -16,5 +17,18 @@ class AboutPage extends PageBase {
     public boolean hasContent() {
         return getBodyText().length() > 0;
     }
-}
 
+    public boolean isOnAboutPage() {
+        return driver.getCurrentUrl().contains("/about");
+    }
+
+    public void navigateBack() {
+        driver.navigate().back();
+        wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/about")));
+    }
+
+    public void navigateForward() {
+        driver.navigate().forward();
+        wait.until(ExpectedConditions.urlContains("/about"));
+    }
+}

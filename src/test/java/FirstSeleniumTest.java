@@ -136,12 +136,9 @@ public class FirstSeleniumTest {
     // ===== JAVASCRIPT EXECUTOR: scroll to bottom =====
     @Test
     public void testScrollToBottomWithJavascript() {
-        driver.get(TestConfig.getBaseUrl());
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("body")));
-        ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight);");
-
-        Long scrollY = (Long) ((JavascriptExecutor) driver).executeScript("return window.scrollY;");
+        MainPage mainPage = new MainPage(driver);
+        Assert.assertTrue("Body should be visible", mainPage.isBodyVisible());
+        long scrollY = mainPage.scrollToBottom();
         Assert.assertTrue("Page should have scrolled down", scrollY > 0);
     }
 
@@ -177,25 +174,21 @@ public class FirstSeleniumTest {
     public void testBrowserHistoryNavigation() {
         driver.get(TestConfig.getBaseUrl());
 
-        driver.get(TestConfig.getBaseUrl() + "/about");
-        Assert.assertTrue(driver.getCurrentUrl().contains("/about"));
+        AboutPage aboutPage = new AboutPage(driver);
+        Assert.assertTrue("Should be on about page", aboutPage.isOnAboutPage());
 
-        driver.navigate().back();
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-        wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/about")));
+        aboutPage.navigateBack();
+        Assert.assertFalse("Should have left about page", driver.getCurrentUrl().contains("/about"));
 
-        driver.navigate().forward();
-        wait.until(ExpectedConditions.urlContains("/about"));
-        Assert.assertTrue(driver.getCurrentUrl().contains("/about"));
+        aboutPage.navigateForward();
+        Assert.assertTrue("Should be back on about page", aboutPage.isOnAboutPage());
     }
 
     // ===== EXPLICIT WAIT TEST =====
     @Test
     public void testExplicitWaitForElement() {
-        driver.get(TestConfig.getBaseUrl());
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        WebElement body = wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("body")));
-        Assert.assertNotNull("Body should be visible after wait", body);
+        MainPage mainPage = new MainPage(driver);
+        Assert.assertTrue("Body should be visible after wait", mainPage.isBodyVisible());
     }
 
     // ===== SEARCH TESTS =====

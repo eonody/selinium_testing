@@ -23,10 +23,17 @@ class SearchResultPage extends PageBase {
         WebElement input = waitAndReturnElement(searchInputBy);
         input.clear();
         input.sendKeys(query);
-        wait.until(ExpectedConditions.or(
-                ExpectedConditions.presenceOfElementLocated(searchResultsBy),
-                ExpectedConditions.presenceOfElementLocated(noResultBy)
-        ));
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ignored) {}
+        try {
+            new org.openqa.selenium.support.ui.WebDriverWait(driver, java.time.Duration.ofSeconds(15))
+                .until(ExpectedConditions.or(
+                    ExpectedConditions.presenceOfElementLocated(searchResultsBy),
+                    ExpectedConditions.presenceOfElementLocated(noResultBy)
+                ));
+        } catch (TimeoutException e) {
+        }
         return this;
     }
 

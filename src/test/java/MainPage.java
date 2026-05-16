@@ -51,4 +51,18 @@ class MainPage extends PageBase {
         waitAndClickable(logoutBy).click();
         wait.until(ExpectedConditions.presenceOfElementLocated(signInBy));
     }
+
+    public long scrollToBottom() {
+        ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight);");
+        return (Long) ((JavascriptExecutor) driver).executeScript("return window.scrollY;");
+    }
+
+    public boolean isBodyVisible() {
+        try {
+            wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("body")));
+            return true;
+        } catch (TimeoutException e) {
+            return false;
+        }
+    }
 }
