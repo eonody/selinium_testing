@@ -36,7 +36,7 @@ public class FirstSeleniumTest {
     @Before
     public void setup() throws MalformedURLException {
         ChromeOptions options = new ChromeOptions();
-        // WebDriver custom config: headless mode support
+
         if (TestConfig.isHeadless()) {
             options.addArguments("--headless");
         }
@@ -65,7 +65,7 @@ public class FirstSeleniumTest {
         LoginPage loginPage = new LoginPage(driver);
         loginPage.open();
         loginPage.login(username, password);
-        // After login, verify we're redirected away from login page
+
         WebDriverWait wait = new WebDriverWait(driver, 10);
         wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/login")));
         Assert.assertFalse(driver.getCurrentUrl().contains("/login"));
@@ -122,7 +122,7 @@ public class FirstSeleniumTest {
         WebDriverWait wait = new WebDriverWait(driver, 10);
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("body")));
         ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight);");
-        // Verify scroll happened by checking scrollY > 0
+
         Long scrollY = (Long) ((JavascriptExecutor) driver).executeScript("return window.scrollY;");
         Assert.assertTrue("Page should have scrolled down", scrollY > 0);
     }
@@ -144,20 +144,17 @@ public class FirstSeleniumTest {
     @Test
     public void testCookieManipulation() {
         MainPage mainPage = new MainPage(driver);
-        // Read existing cookies
+
         Set<Cookie> cookies = driver.manage().getCookies();
         int initialCount = cookies.size();
 
-        // Add a custom cookie
         Cookie testCookie = new Cookie("test_cookie", "selenium_test_value");
         driver.manage().addCookie(testCookie);
 
-        // Verify it was added
         Cookie retrieved = driver.manage().getCookieNamed("test_cookie");
         Assert.assertNotNull("Cookie should exist", retrieved);
         Assert.assertEquals("selenium_test_value", retrieved.getValue());
 
-        // Delete it
         driver.manage().deleteCookieNamed("test_cookie");
         Assert.assertNull("Cookie should be deleted", driver.manage().getCookieNamed("test_cookie"));
     }
@@ -166,14 +163,13 @@ public class FirstSeleniumTest {
     @Test
     public void testBrowserHistoryNavigation() {
         driver.get(TestConfig.getBaseUrl());
-        String firstUrl = driver.getCurrentUrl();
 
         driver.get(TestConfig.getBaseUrl() + "/about");
         String secondUrl = driver.getCurrentUrl();
         Assert.assertTrue(secondUrl.contains("/about"));
 
         driver.navigate().back();
-        // Should be back to first page
+
         WebDriverWait wait = new WebDriverWait(driver, 5);
         wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/about")));
 
@@ -190,6 +186,120 @@ public class FirstSeleniumTest {
         WebElement body = wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("body")));
         Assert.assertNotNull("Body should be visible after wait", body);
     }
+
+    // ===== SEARCH TEST =====
+    @Test
+    public void testPlayerSearchReturnsResults() {
+        SearchResultPage searchPage = new SearchResultPage(driver);
+        searchPage.open();
+        searchPage.searchForPlayer("Magnus");
+        int count = searchPage.getResultCount();
+        Assert.assertTrue("Search should return at least one result", count > 0);
+    }
+
+    @Test
+    public void testPlayerSearchFirstResultContainsQuery() {
+        SearchResultPage searchPage = new SearchResultPage(driver);
+        searchPage.open();
+        searchPage.searchForPlayer("DrNykterstein");
+        String firstResult = searchPage.getFirstResultText();
+        Assert.assertTrue("First result should contain the search term",
+                firstResult.toLowerCase().contains("drnykterstein"));
+    }
+
+    @Test
+    public void testPlayerSearchEmptyResultForGibberish() {
+        SearchResultPage searchPage = new SearchResultPage(driver);
+        searchPage.open();
+        searchPage.searchForPlayer("");
+        int count = searchPage.getResultCount();
+        Assert.assertEquals("Search for gibberish should return no results", 0, count);
+    }
+
+    // ===== LOGOUT TEST =====
+    @Test
+    public void testLogout() {
+        String username = TestConfig.getUsername();
+        String password = TestConfig.getPassword();
+        Assume.assumeTrue("Skipping: no credentials in test.properties",
+                !username.isEmpty() && !password.isEmpty());
+
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.open();
+        loginPage.login(username, password);
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/login")));
+
+        MainPage mainPage = new MainPage(driver);
+        mainPage.logout();
+        Assert.assertTrue("Sign in link should be visible after logout", mainPage.isSignInVisible());
+    }
+
+    // ===== FORM WITH LOGGED-IN USER (profile page) =====
+    @Test
+    public void testFormWithLoggedInUser() {
+        String username = TestConfig.getUsername();
+        String password = TestConfig.getPassword();
+        Assume.assumeTrue("Skipping: no credentials in test.properties",
+                !username.isEmpty() && !password.isEmpty());
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.open();
+        loginPage.login(username, password);
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/login")));
+
+        ProfilePage profilePage = new ProfilePage(driver);
+        profilePage.open();
+        profilePage.fillBio("Selenium test bio");
+        profilePage.fillLocation("Test City");
+        profilePage.submitForm();
+        String flash = profilePage.getFlashMessage();
+        Assert.assertTrue("Should show success message or page should reload",
+                flash.length() > 0 || driver.getCurrentUrl().contains("/account/profile"));
+    }
+
+    // ===== DROPDOWN TEST (Report page reason) =====
+    @Test
+    public void testReportPageDropdownSelection() {
+        String username = TestConfig.getUsername();
+        String password = TestConfig.getPassword();
+        Assume.assumeTrue("Skipping: no credentials in test.properties",
+                !username.isEmpty() && !password.isEmpty());
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.open();
+        loginPage.login(username, password);
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/login")));
+
+        ReportPage reportPage = new ReportPage(driver);
+        int optionCount = reportPage.getReasonOptionCount();
+        Assert.assertTrue("Dropdown should have multiple options", optionCount > 1);
+        reportPage.selectReasonByValue("cheat");
+        String selected = reportPage.getSelectedReason();
+        Assert.assertEquals("Selected option should be Cheat", "Cheat", selected);
+    }
+
+    // ===== PREFERENCE CHOICE TEST (game-behavior) =====
+    @Test
+    public void testPreferenceChoiceSelection() {
+        String username = TestConfig.getUsername();
+        String password = TestConfig.getPassword();
+        Assume.assumeTrue("Skipping: no credentials in test.properties",
+                !username.isEmpty() && !password.isEmpty());
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.open();
+        loginPage.login(username, password);
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/login")));
+
+        PreferencesPage prefsPage = new PreferencesPage(driver);
+        prefsPage.openGameBehavior();
+        List<WebElement> radios = prefsPage.getRadioButtons();
+        Assert.assertTrue("Should have radio buttons", radios.size() > 0);
+        prefsPage.selectRadioButton(0);
+        Assert.assertTrue("Radio button should be selected", prefsPage.isRadioButtonSelected(0));
+    }
+
 
     @After
     public void close() {

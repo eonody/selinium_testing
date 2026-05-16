@@ -4,9 +4,8 @@ import java.util.List;
 
 class LeaderboardPage extends PageBase {
 
-    // Complex XPath: table rows containing player ratings
-    private By playerRowsBy = By.xpath("//table[contains(@class,'slist')]//tbody//tr[td[contains(@class,'name')]]");
-    private By headerBy = By.xpath("//main//h1");
+    private By playerRowsBy = By.xpath("//ol[contains(@class,'user-top')]//li");
+    private By headerBy = By.xpath("//main[contains(@class, 'page-manu')]//h2[contains(text(),'Online players')]");
 
     public LeaderboardPage(WebDriver driver) {
         super(driver);

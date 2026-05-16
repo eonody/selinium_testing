@@ -4,11 +4,29 @@ import java.util.List;
 
 class SearchResultPage extends PageBase {
 
-    // Complex XPath: search result entries
-    private By searchResultsBy = By.xpath("//div[contains(@class,'search')]//a[contains(@class,'result')]");
+    private By searchInputBy = By.xpath("//div[@class='site-title-nav']//a[@class='link']//input");
+    private By searchResultsBy = By.xpath("//div[contains(@class,'complete-list')]//a[contains(@href,'/@/')]");
+    private By noResultBy = By.xpath("//div[contains(@class,'complete-list')]//div[contains(@class,'empty')]");
 
     public SearchResultPage(WebDriver driver) {
         super(driver);
+    }
+
+    public SearchResultPage open() {
+        this.driver.get(TestConfig.getBaseUrl());
+        return this;
+    }
+
+    public SearchResultPage searchForPlayer(String query) {
+        WebElement input = waitAndReturnElement(searchInputBy);
+        input.click();
+        input.clear();
+        input.sendKeys(query);
+        wait.until(ExpectedConditions.or(
+                ExpectedConditions.presenceOfElementLocated(searchResultsBy),
+                ExpectedConditions.presenceOfElementLocated(noResultBy)
+        ));
+        return this;
     }
 
     public int getResultCount() {
@@ -17,6 +35,26 @@ class SearchResultPage extends PageBase {
             return results.size();
         } catch (Exception e) {
             return 0;
+        }
+    }
+
+    public String getFirstResultText() {
+        try {
+            List<WebElement> results = driver.findElements(searchResultsBy);
+            if (!results.isEmpty()) {
+                return results.get(0).getText();
+            }
+        } catch (Exception e) {
+            // fall through
+        }
+        return "";
+    }
+
+    public boolean hasNoResults() {
+        try {
+            return driver.findElement(noResultBy).isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false;
         }
     }
 }

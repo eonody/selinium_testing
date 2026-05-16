@@ -55,19 +55,19 @@ basic:
     description: "Fill a simple form and submit it (e.g. login with username and password)"
 
   form_with_user:            # 3 pts | once
-    done: false
+    done: true
     description: "Submit a form that requires a registered/logged-in user"
 
   logout:                    # 2 pts | once
-    done: false
+    done: true
     description: "Log out from the application and verify it"
 
   fill_input:                # 1 pt each | repeatable | max 10
-    count: 2
+    count: 5
     description: "Fill an input field (text, radio, checkbox, date, etc.) — each different type counts as one"
 
   send_form:                 # 1 pt each | repeatable | max 10
-    count: 1
+    count: 2
     description: "Submit a form (each distinct form counts as one)"
 
   static_page_test:          # 2 pts | once
@@ -79,20 +79,20 @@ basic:
     description: "Define an array of URLs or page data, iterate over them and verify something on each page (e.g. check title or a specific element on 5 different pages using a loop)"
 
   complex_xpath:             # 1 pt each | repeatable | max 10
-    count: 8
+    count: 10
     description: "Use a complex XPath expression (e.g. //div[@class='content']//a[contains(@href,'profile')])"
 
   textarea:                  # 1 pt | once
-    done: false
+    done: true
     description: "Fill or read the content of a textarea element"
 
   dropdown:                  # 2 pts | once
-    done: false
+    done: true
     description: "Select an option from a drop-down (using Select class or similar)"
     link: "https://www.selenium.dev/documentation/webdriver/support_features/select_lists/"
 
   radio_button:              # 1 pt | once
-    done: false
+    done: true
     description: "Select or verify a radio button"
 
   at_least_4_classes:        # 3 pts | once
@@ -205,7 +205,8 @@ advanced:
     link: "https://www.selenium.dev/documentation/webdriver/browsers/"
 
   dockerized_execution:      # 4 pts | once
-    done: true
+    done: false
     description: "Run tests inside a Docker container (e.g. using docker-compose with Selenium Grid)"
     link: "https://www.selenium.dev/documentation/grid/getting_started/"
+
 

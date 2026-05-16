@@ -1,7 +1,8 @@
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
 class AboutPage extends PageBase {
+
+    private By headingBy = By.xpath("//main[contains(@class, 'page-manu')]//div[contains(@class,'box')]//h1");
 
     public AboutPage(WebDriver driver) {
         super(driver);
@@ -9,8 +10,6 @@ class AboutPage extends PageBase {
     }
 
     public String getMainHeading() {
-        // Complex XPath: heading inside main content area
-        By headingBy = By.xpath("//main//div[contains(@class,'box')]//h1");
         return waitAndReturnElement(headingBy).getText();
     }
 

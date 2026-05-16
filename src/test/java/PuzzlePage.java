@@ -1,8 +1,9 @@
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import java.util.List;
 
 class PuzzlePage extends PageBase {
+
+    private By boardBy = By.xpath("//main//div[contains(@class,'puzzle')]//cg-board");
 
     public PuzzlePage(WebDriver driver) {
         super(driver);
@@ -11,8 +12,6 @@ class PuzzlePage extends PageBase {
 
     public boolean isPuzzleBoardVisible() {
         try {
-            // Complex XPath: the chessboard inside the puzzle
-            By boardBy = By.xpath("//main//div[contains(@class,'puzzle')]//cg-board");
             wait.until(ExpectedConditions.presenceOfElementLocated(boardBy));
             return true;
         } catch (Exception e) {

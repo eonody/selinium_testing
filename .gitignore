@@ -7,3 +7,4 @@ out/
 downloads/
 screenshots/
 .venv/
+test.properties
