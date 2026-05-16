@@ -400,15 +400,17 @@ public class FirstSeleniumTest {
     // ===== DOWNLOAD FILES TEST (PGN game export) =====
     @Test
     public void testDownloadPgnFile() throws Exception {
+        driver.get(TestConfig.getBaseUrl());
 
-        driver.get(TestConfig.getBaseUrl() + "/game/export/q7ZvsdUF");
+        // Use JavaScript fetch to download PGN content
+        String pgn = (String) ((JavascriptExecutor) driver).executeScript(
+            "var response = await fetch('/game/export/q7ZvsdUF');" +
+            "return await response.text();"
+        );
 
-        Thread.sleep(2000);
-
-        String pageSource = driver.getPageSource();
+        Assert.assertNotNull("PGN response should not be null", pgn);
         Assert.assertTrue("Downloaded content should contain PGN data",
-                pageSource.contains("[Event") || pageSource.contains("[Site") ||
-                pageSource.contains("1."));
+                pgn.contains("[Event") || pgn.contains("[Site") || pgn.contains("1."));
     }
 
     // ===== DOCKERIZED EXECUTION TEST =====
