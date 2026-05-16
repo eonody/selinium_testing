@@ -49,6 +49,19 @@ public class FirstSeleniumTest {
         driver.manage().window().maximize();
     }
 
+    private void loginAndWait(String username, String password) {
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.open();
+        loginPage.login(username, password);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/login")));
+    }
+
+    private void assumeCredentials(String username, String password) {
+        Assume.assumeTrue("Skipping: no credentials configured",
+                !username.isEmpty() && !password.isEmpty());
+    }
+
     // ===== LOGIN FORM TEST =====
     @Test
     public void testLoginFormIsDisplayed() {
@@ -61,14 +74,9 @@ public class FirstSeleniumTest {
     public void testLoginWithCredentials() {
         String username = TestConfig.getUsername();
         String password = TestConfig.getPassword();
-        Assume.assumeTrue("Skipping: no credentials in test.properties",
-                !username.isEmpty() && !password.isEmpty());
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.open();
-        loginPage.login(username, password);
+        assumeCredentials(username, password);
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/login")));
+        loginAndWait(username, password);
         Assert.assertFalse(driver.getCurrentUrl().contains("/login"));
     }
 
@@ -79,6 +87,9 @@ public class FirstSeleniumTest {
         Assert.assertTrue("About page should have content", aboutPage.hasContent());
         String body = aboutPage.getBodyText();
         Assert.assertTrue("About page should mention lichess", body.toLowerCase().contains("lichess"));
+
+        String heading = aboutPage.getMainHeading();
+        Assert.assertFalse("Heading should not be empty", heading.isEmpty());
     }
 
     // ===== PAGE TITLE TEST =====
@@ -107,6 +118,12 @@ public class FirstSeleniumTest {
         LeaderboardPage leaderboardPage = new LeaderboardPage(driver);
         String body = leaderboardPage.getBodyText();
         Assert.assertTrue("Leaderboard should have content", body.length() > 0);
+
+        int playerCount = leaderboardPage.getPlayerCount();
+        Assert.assertTrue("Leaderboard should show players", playerCount > 0);
+
+        String header = leaderboardPage.getHeaderText();
+        Assert.assertFalse("Header should not be empty", header.isEmpty());
     }
 
     // ===== PUZZLE PAGE TEST =====
@@ -131,23 +148,18 @@ public class FirstSeleniumTest {
     // ===== HOVER TEST =====
     @Test
     public void testHoverOnElement() {
-        driver.get(TestConfig.getBaseUrl());
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
+        MainPage mainPage = new MainPage(driver);
         By logoBy = By.xpath("//a[@id='site-title' or contains(@class,'site-title')]");
-        WebElement el = wait.until(ExpectedConditions.presenceOfElementLocated(logoBy));
-        new Actions(driver).moveToElement(el).perform();
+        mainPage.hoverElement(logoBy);
 
-        Assert.assertTrue("Element should be visible after hover", el.isDisplayed());
+        Assert.assertTrue("Element should be visible after hover",
+                driver.findElement(logoBy).isDisplayed());
     }
 
     // ===== COOKIE MANIPULATION =====
     @Test
     public void testCookieManipulation() {
         MainPage mainPage = new MainPage(driver);
-
-        Set<Cookie> cookies = driver.manage().getCookies();
-        int initialCount = cookies.size();
 
         Cookie testCookie = new Cookie("test_cookie", "selenium_test_value");
         driver.manage().addCookie(testCookie);
@@ -166,11 +178,9 @@ public class FirstSeleniumTest {
         driver.get(TestConfig.getBaseUrl());
 
         driver.get(TestConfig.getBaseUrl() + "/about");
-        String secondUrl = driver.getCurrentUrl();
-        Assert.assertTrue(secondUrl.contains("/about"));
+        Assert.assertTrue(driver.getCurrentUrl().contains("/about"));
 
         driver.navigate().back();
-
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/about")));
 
@@ -188,7 +198,7 @@ public class FirstSeleniumTest {
         Assert.assertNotNull("Body should be visible after wait", body);
     }
 
-    // ===== SEARCH TEST =====
+    // ===== SEARCH TESTS =====
     @Test
     public void testPlayerSearchReturnsResults() {
         SearchResultPage searchPage = new SearchResultPage(driver);
@@ -209,12 +219,12 @@ public class FirstSeleniumTest {
     }
 
     @Test
-    public void testPlayerSearchEmptyResultForGibberish() {
+    public void testPlayerSearchNoResultForEmpty() {
         SearchResultPage searchPage = new SearchResultPage(driver);
         searchPage.open();
-        searchPage.searchForPlayer("");
-        int count = searchPage.getResultCount();
-        Assert.assertEquals("Search for gibberish should return no results", 0, count);
+        searchPage.searchForPlayer("xyznonexistent99999");
+        Assert.assertTrue("Should show no results", searchPage.hasNoResults());
+        Assert.assertEquals("Result count should be 0", 0, searchPage.getResultCount());
     }
 
     // ===== LOGOUT TEST =====
@@ -222,16 +232,12 @@ public class FirstSeleniumTest {
     public void testLogout() {
         String username = TestConfig.getUsername();
         String password = TestConfig.getPassword();
-        Assume.assumeTrue("Skipping: no credentials in test.properties",
-                !username.isEmpty() && !password.isEmpty());
+        assumeCredentials(username, password);
 
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.open();
-        loginPage.login(username, password);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/login")));
+        loginAndWait(username, password);
 
         MainPage mainPage = new MainPage(driver);
+        Assert.assertTrue("User menu should be visible after login", mainPage.isUserMenuVisible());
         mainPage.logout();
         Assert.assertTrue("Sign in link should be visible after logout", mainPage.isSignInVisible());
     }
@@ -241,22 +247,23 @@ public class FirstSeleniumTest {
     public void testFormWithLoggedInUser() {
         String username = TestConfig.getUsername();
         String password = TestConfig.getPassword();
-        Assume.assumeTrue("Skipping: no credentials in test.properties",
-                !username.isEmpty() && !password.isEmpty());
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.open();
-        loginPage.login(username, password);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/login")));
+        assumeCredentials(username, password);
+        loginAndWait(username, password);
 
         ProfilePage profilePage = new ProfilePage(driver);
         profilePage.open();
+
+        Assert.assertTrue("Bio textarea should exist", profilePage.hasBioTextarea());
         profilePage.fillBio("Selenium test bio");
+        profilePage.fillRealName("Test User");
         profilePage.fillLocation("Test City");
         profilePage.submitForm();
         String flash = profilePage.getFlashMessage();
         Assert.assertTrue("Should show success message or page should reload",
                 flash.length() > 0 || driver.getCurrentUrl().contains("/account/profile"));
+
+        String bioValue = profilePage.getBioValue();
+        Assert.assertTrue("Bio should contain what we typed", bioValue.contains("Selenium test bio"));
     }
 
     // ===== DROPDOWN TEST (Report page reason) =====
@@ -264,20 +271,19 @@ public class FirstSeleniumTest {
     public void testReportPageDropdownSelection() {
         String username = TestConfig.getUsername();
         String password = TestConfig.getPassword();
-        Assume.assumeTrue("Skipping: no credentials in test.properties",
-                !username.isEmpty() && !password.isEmpty());
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.open();
-        loginPage.login(username, password);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/login")));
+        assumeCredentials(username, password);
+        loginAndWait(username, password);
 
         ReportPage reportPage = new ReportPage(driver);
         int optionCount = reportPage.getReasonOptionCount();
         Assert.assertTrue("Dropdown should have multiple options", optionCount > 1);
+
         reportPage.selectReasonByValue("cheat");
-        String selected = reportPage.getSelectedReason();
-        Assert.assertEquals("Selected option should be Cheat", "Cheat", selected);
+        Assert.assertEquals("Selected option should be Cheat", "Cheat", reportPage.getSelectedReason());
+
+        reportPage.selectReasonByIndex(0);
+        String firstOption = reportPage.getSelectedReason();
+        Assert.assertFalse("First option should not be empty", firstOption.isEmpty());
     }
 
     // ===== PREFERENCE CHOICE TEST (game-behavior) =====
@@ -285,13 +291,8 @@ public class FirstSeleniumTest {
     public void testPreferenceChoiceSelection() {
         String username = TestConfig.getUsername();
         String password = TestConfig.getPassword();
-        Assume.assumeTrue("Skipping: no credentials in test.properties",
-                !username.isEmpty() && !password.isEmpty());
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.open();
-        loginPage.login(username, password);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/login")));
+        assumeCredentials(username, password);
+        loginAndWait(username, password);
 
         PreferencesPage prefsPage = new PreferencesPage(driver);
         prefsPage.openGameBehavior();
@@ -301,6 +302,37 @@ public class FirstSeleniumTest {
         Assert.assertTrue("Radio button should be selected", prefsPage.isRadioButtonSelected(0));
     }
 
+    // ===== MAIN PAGE FOOTER TEST =====
+    @Test
+    public void testMainPageFooter() {
+        MainPage mainPage = new MainPage(driver);
+        String footerText = mainPage.getFooterText();
+        Assert.assertFalse("Footer should not be empty", footerText.isEmpty());
+    }
+
+    // ===== SIGN IN LINK NAVIGATION =====
+    @Test
+    public void testSignInLinkNavigation() {
+        MainPage mainPage = new MainPage(driver);
+        Assert.assertTrue("Sign in link should be visible", mainPage.isSignInVisible());
+        LoginPage loginPage = mainPage.goToLogin();
+        Assert.assertTrue("Should navigate to login page", driver.getCurrentUrl().contains("/login"));
+        Assert.assertTrue("Login form should be displayed", loginPage.isLoginFormDisplayed());
+    }
+
+    // ===== PREFERENCES DISPLAY PAGE =====
+    @Test
+    public void testPreferenceDisplayPage() {
+        String username = TestConfig.getUsername();
+        String password = TestConfig.getPassword();
+        assumeCredentials(username, password);
+        loginAndWait(username, password);
+
+        PreferencesPage prefsPage = new PreferencesPage(driver);
+        prefsPage.openGameDisplay();
+        List<WebElement> radios = prefsPage.getRadioButtons();
+        Assert.assertTrue("Display preferences should have radio buttons", radios.size() > 0);
+    }
 
     @After
     public void close() {

@@ -5,7 +5,7 @@ import java.util.List;
 class LeaderboardPage extends PageBase {
 
     private By playerRowsBy = By.xpath("//ol[contains(@class,'user-top')]//li");
-    private By headerBy = By.xpath("//main[contains(@class, 'page-manu')]//h2[contains(text(),'Online players')]");
+    private By headerBy = By.xpath("//main[contains(@class, 'page-menu')]//h2[contains(text(),'Online players')]");
 
     public LeaderboardPage(WebDriver driver) {
         super(driver);
@@ -17,6 +17,7 @@ class LeaderboardPage extends PageBase {
     }
 
     public int getPlayerCount() {
+        wait.until(ExpectedConditions.presenceOfElementLocated(playerRowsBy));
         List<WebElement> rows = driver.findElements(playerRowsBy);
         return rows.size();
     }

@@ -4,7 +4,7 @@ import java.util.List;
 
 class SearchResultPage extends PageBase {
 
-    private By searchInputBy = By.xpath("//div[@class='site-title-nav']//a[@class='link']//input");
+    private By searchInputBy = By.xpath("//div[@class='site-buttons']//div[@id='clinput']//input");
     private By searchResultsBy = By.xpath("//div[contains(@class,'complete-list')]//a[contains(@href,'/@/')]");
     private By noResultBy = By.xpath("//div[contains(@class,'complete-list')]//div[contains(@class,'empty')]");
 

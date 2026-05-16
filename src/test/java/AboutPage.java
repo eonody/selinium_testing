@@ -2,7 +2,7 @@ import org.openqa.selenium.*;
 
 class AboutPage extends PageBase {
 
-    private By headingBy = By.xpath("//main[contains(@class, 'page-manu')]//div[contains(@class,'box')]//h1");
+    private By headingBy = By.xpath("//main[contains(@class, 'page-menu')]//div[contains(@class,'box')]//h1");
 
     public AboutPage(WebDriver driver) {
         super(driver);

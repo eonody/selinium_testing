@@ -25,7 +25,7 @@ class ProfilePage extends PageBase {
     }
 
     public String getBioValue() {
-        return driver.findElement(bioTextareaBy).getAttribute("value");
+        return waitAndReturnElement(bioTextareaBy).getAttribute("value");
     }
 
     public boolean hasBioTextarea() {

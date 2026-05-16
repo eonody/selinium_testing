@@ -33,7 +33,7 @@ class PreferencesPage extends PageBase {
     }
 
     public boolean isRadioButtonSelected(int index) {
-        List<WebElement> radios = driver.findElements(radioBy);
+        List<WebElement> radios = getRadioButtons();
         return radios.get(index).isSelected();
     }
 

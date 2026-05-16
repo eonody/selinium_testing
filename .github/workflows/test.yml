@@ -37,4 +37,20 @@ jobs:
           SELENIUM_HUB_URL: http://localhost:4444/wd/hub
         run: gradle test --info
 
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: build/reports/tests/test/
+          retention-days: 3
+
+      - name: Upload screenshots
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: failure-screenshots
+          path: screenshots/
+          retention-days: 3
+
 
