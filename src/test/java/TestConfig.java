@@ -27,11 +27,11 @@ class TestConfig {
     }
 
     public static String getUsername() {
-        return get("username", "");
+        return get("test_username", "");
     }
 
     public static String getPassword() {
-        return get("password", "");
+        return get("test_password", "");
     }
 
     public static String getBrowser() {
