@@ -6,9 +6,9 @@ class MainPage extends PageBase {
 
     private By playButtonBy = By.xpath("//div[contains(@class,'site-title-nav')]//span[contains(text(),'Play')]/..");
     private By signInBy = By.xpath("//div[contains(@class, 'signin-or-signup')]//a[contains(@class,'signin')]");
-    private By userMenuBy = By.xpath("//div[contains(@class,'user_tag')]//button[@id='user_tag']");
-    private By footerBy = By.xpath("//div[contains(@class,'lobby_about')]");
-    private By logoutBy = By.xpath("//div[@id='dasher_app']//form[contains(@class,'logout')]//button[@type='submit']");
+    private By userMenuBy = By.xpath("//div[contains(@class,'dasher')]//button[@id='user_tag']");
+    private By footerBy = By.xpath("//div[contains(@class,'lobby__about')]");
+    private By logoutBy = By.xpath("//form[contains(@class,'logout')]//button[@type='submit']");
 
 
     public MainPage(WebDriver driver) {
