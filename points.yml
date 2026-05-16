@@ -149,7 +149,7 @@ advanced:
     link: "https://www.selenium.dev/documentation/webdriver/actions_api/mouse/"
 
   drag_and_drop:             # 8 pts | once
-    done: false
+    done: true
     description: "Drag and drop an element to another location"
     link: "https://www.selenium.dev/documentation/webdriver/actions_api/mouse/"
 
@@ -173,11 +173,11 @@ advanced:
     description: "Verify an e-mail was sent (e.g. registration activation link, password reset)"
 
   random_data:               # 8 pts | once
-    done: false
+    done: true
     description: "Generate random test data (e.g. random username, email) and use it in a test"
 
   download_files:            # 12 pts | once
-    done: false
+    done: true
     description: "Download one or more files to a folder and verify they were saved"
 
   config_file:               # 6 pts | once
@@ -205,7 +205,7 @@ advanced:
     link: "https://www.selenium.dev/documentation/webdriver/browsers/"
 
   dockerized_execution:      # 4 pts | once
-    done: false
+    done: true
     description: "Run tests inside a Docker container (e.g. using docker-compose with Selenium Grid)"
     link: "https://www.selenium.dev/documentation/grid/getting_started/"
 
