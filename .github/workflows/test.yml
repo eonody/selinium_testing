@@ -49,6 +49,6 @@ jobs:
         with:
           name: failure-screenshots
           path: screenshots/
-          retention-days: 3
+          retention-days: 2
 
 

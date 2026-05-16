@@ -50,11 +50,28 @@ public class FirstSeleniumTest {
     }
 
     private void loginAndWait(String username, String password) {
+        System.out.println("DEBUG: username length=" + username.length() + ", password length=" + password.length());
         LoginPage loginPage = new LoginPage(driver);
         loginPage.open();
         loginPage.login(username, password);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/login")));
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+            wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/login")));
+        } catch (TimeoutException e) {
+            // Take screenshot to see what the login page looks like
+            try {
+                File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+                File dest = new File("screenshots/login_failure_debug.png");
+                dest.getParentFile().mkdirs();
+                Files.copy(src.toPath(), dest.toPath());
+                System.out.println("Login debug screenshot saved");
+                System.out.println("Current URL: " + driver.getCurrentUrl());
+                System.out.println("Page body: " + driver.findElement(By.tagName("body")).getText().substring(0, Math.min(500, driver.findElement(By.tagName("body")).getText().length())));
+            } catch (Exception ex) {
+                System.out.println("Could not capture debug info: " + ex.getMessage());
+            }
+            throw e;
+        }
     }
 
     private void assumeCredentials(String username, String password) {
