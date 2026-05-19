@@ -3,6 +3,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.openqa.selenium.*;
 import org.openqa.selenium.edge.EdgeOptions;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.http.ClientConfig;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -24,7 +25,8 @@ public class CrossBrowserTest {
     public static Collection<Object[]> browsers() {
         return Arrays.asList(new Object[][]{
                 {"chrome"},
-                {"edge"}
+                {"edge"},
+                {"firefox"}
         });
     }
 
@@ -36,23 +38,40 @@ public class CrossBrowserTest {
     public void setup() throws Exception {
         String hubUrl = TestConfig.getSeleniumHubUrl();
 
-        if ("edge".equalsIgnoreCase(browserName)) {
-            EdgeOptions options = new EdgeOptions();
-            if (TestConfig.isHeadless()) {
-                options.addArguments("--headless");
+        try {
+            if ("edge".equalsIgnoreCase(browserName)) {
+                EdgeOptions options = new EdgeOptions();
+                if (TestConfig.isHeadless()) {
+                    options.addArguments("--headless");
+                }
+                ClientConfig clientConfig = ClientConfig.defaultConfig()
+                        .baseUrl(new URL(hubUrl))
+                        .readTimeout(Duration.ofSeconds(30))
+                        .connectionTimeout(Duration.ofSeconds(30));
+                driver = RemoteWebDriver.builder()
+                        .oneOf(options)
+                        .config(clientConfig)
+                        .build();
+            } else if ("firefox".equalsIgnoreCase(browserName)) {
+                FirefoxOptions options = new FirefoxOptions();
+                if (TestConfig.isHeadless()) {
+                    options.addArguments("--headless");
+                }
+                ClientConfig clientConfig = ClientConfig.defaultConfig()
+                        .baseUrl(new URL(hubUrl))
+                        .readTimeout(Duration.ofSeconds(30))
+                        .connectionTimeout(Duration.ofSeconds(30));
+                driver = RemoteWebDriver.builder()
+                        .oneOf(options)
+                        .config(clientConfig)
+                        .build();
+            } else {
+                driver = new RemoteWebDriver(new URL(hubUrl), TestConfig.createChromeOptions());
             }
-            ClientConfig clientConfig = ClientConfig.defaultConfig()
-                    .baseUrl(new URL(hubUrl))
-                    .readTimeout(Duration.ofSeconds(30))
-                    .connectionTimeout(Duration.ofSeconds(30));
-            driver = RemoteWebDriver.builder()
-                    .oneOf(options)
-                    .config(clientConfig)
-                    .build();
-        } else {
-            driver = new RemoteWebDriver(new URL(hubUrl), TestConfig.createChromeOptions());
+            driver.manage().window().maximize();
+        } catch (Exception e) {
+            Assume.assumeTrue("Skipping: " + browserName + " browser not available on Selenium Grid (" + e.getMessage() + ")", false);
         }
-        driver.manage().window().maximize();
     }
 
     @Test
