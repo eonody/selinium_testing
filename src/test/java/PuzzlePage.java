@@ -8,8 +8,8 @@ class PuzzlePage extends PageBase {
 
     private By boardBy = By.xpath("//main//div[contains(@class,'puzzle')]//cg-board");
     private By piecesBy = By.xpath("//main//div[contains(@class,'puzzle')]//cg-board//piece");
-    private By coordColorRandomBy = By.xpath("//*[@id='coord_color_random']");
-    private By coordColorBlackBy = By.xpath("//*[@id='coord_color_black']");
+    private By coordColorRandomBy = By.xpath("//div//label[contains(@class,'color_random')]");
+    private By coordColorBlackBy = By.xpath("//div//label[contains(@class,'color_black')]");
 
     public PuzzlePage(WebDriver driver) {
         super(driver);
@@ -49,7 +49,9 @@ class PuzzlePage extends PageBase {
     }
 
     public boolean isColorRadioSelected(String color) {
-        return getColorRadio(color).isSelected();
+        String inputId = "black".equals(color) ? "coord_color_black" : "coord_color_random";
+        WebElement input = driver.findElement(By.id(inputId));
+        return input.isSelected();
     }
 
     public void selectColorRadio(String color) {
