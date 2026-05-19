@@ -1,0 +1,22 @@
+# Build output
+build/
+out/
+*.class
+
+# Gradle
+.gradle/
+
+# IDE
+.idea/
+*.iml
+
+# Python virtual env
+.venv/
+
+# Test artifacts
+screenshots/
+downloads/
+*.log
+
+# Sensitive config
+test.properties
