@@ -79,8 +79,18 @@ public abstract class TestBase {
         loginPage.open();
         assumeNoCloudflare();
         loginPage.login(username, password);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
-        wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/login")));
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+            wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/login")));
+        } catch (TimeoutException e) {
+            // Check if CAPTCHA appeared after login attempt
+            String body = driver.findElement(By.tagName("body")).getText().toLowerCase();
+            if (body.contains("captcha") || body.contains("checking your browser")
+                    || body.contains("cloudflare") || body.contains("verify you are human")) {
+                Assume.assumeTrue("Skipping: CAPTCHA detected after login attempt", false);
+            }
+            throw e;
+        }
     }
 }
 
