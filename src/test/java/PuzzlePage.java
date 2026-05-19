@@ -35,6 +35,12 @@ class PuzzlePage extends PageBase {
 
     public void openCoordinateTraining() {
         this.driver.get(TestConfig.getBaseUrl() + "/training/coordinate");
+        wait.until(ExpectedConditions.presenceOfElementLocated(coordColorRandomBy));
+    }
+
+    public boolean hasColorRadio(String color) {
+        By locator = "black".equals(color) ? coordColorBlackBy : coordColorRandomBy;
+        return isElementPresent(locator);
     }
 
     public WebElement getColorRadio(String color) {

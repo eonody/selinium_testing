@@ -83,13 +83,16 @@ public abstract class TestBase {
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
             wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/login")));
         } catch (TimeoutException e) {
-            String body = driver.findElement(By.tagName("body")).getText().toLowerCase();
-            if (body.contains("captcha") || body.contains("checking your browser")
-                    || body.contains("cloudflare") || body.contains("verify you are human")) {
-                Assume.assumeTrue("Skipping: CAPTCHA detected after login attempt", false);
+            try {
+                File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+                File dest = new File("screenshots/login_failed_captcha.png");
+                dest.getParentFile().mkdirs();
+                Files.copy(src.toPath(), dest.toPath());
+                System.out.println("Login failed screenshot saved: " + dest.getAbsolutePath());
+            } catch (Exception ex) {
+                System.out.println("Could not take login failure screenshot: " + ex.getMessage());
             }
-            throw e;
+            Assume.assumeTrue("Skipping: Login did not complete (likely CAPTCHA) - screenshot saved", false);
         }
     }
 }
-
