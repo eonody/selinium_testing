@@ -41,4 +41,22 @@ class PageBase {
         WebElement el = waitAndReturnElement(locator);
         new Actions(driver).moveToElement(el).perform();
     }
+
+    protected boolean isElementPresent(By locator) {
+        try {
+            wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    protected boolean isElementVisible(By locator) {
+        try {
+            wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

@@ -1,11 +1,9 @@
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
 import java.net.URL;
-import java.time.Duration;
 
 
 public class DependentTests {
@@ -13,14 +11,7 @@ public class DependentTests {
 
     @BeforeMethod
     public void setup() throws Exception {
-        ChromeOptions options = new ChromeOptions();
-        if (TestConfig.isHeadless()) {
-            options.addArguments("--headless");
-        }
-        options.addArguments("--window-size=1920,1080");
-        options.addArguments("--no-sandbox");
-        options.addArguments("--disable-dev-shm-usage");
-        driver = new RemoteWebDriver(new URL(TestConfig.getSeleniumHubUrl()), options);
+        driver = new RemoteWebDriver(new URL(TestConfig.getSeleniumHubUrl()), TestConfig.createChromeOptions());
         driver.manage().window().maximize();
     }
 

@@ -2,7 +2,6 @@ import org.junit.*;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -35,14 +34,7 @@ public abstract class TestBase {
 
     @Before
     public void setup() throws MalformedURLException {
-        ChromeOptions options = new ChromeOptions();
-        if (TestConfig.isHeadless()) {
-            options.addArguments("--headless");
-        }
-        options.addArguments("--window-size=1920,1080");
-        options.addArguments("--no-sandbox");
-        options.addArguments("--disable-dev-shm-usage");
-        driver = new RemoteWebDriver(new URL(TestConfig.getSeleniumHubUrl()), options);
+        driver = new RemoteWebDriver(new URL(TestConfig.getSeleniumHubUrl()), TestConfig.createChromeOptions());
         driver.manage().window().maximize();
     }
 

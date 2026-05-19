@@ -6,7 +6,6 @@ import java.util.List;
 class PreferencesPage extends PageBase {
 
     private By radioBy = By.xpath("//form[contains(@class, 'autosubmit')]//div[not(@class)]//section//input[@type='radio']");
-    private By flashBy = By.xpath("//p[contains(@class,'saved') and contains(@class,'text')]");
 
     public PreferencesPage(WebDriver driver) {
         super(driver);
@@ -38,9 +37,5 @@ class PreferencesPage extends PageBase {
         return radios.get(index).isSelected();
     }
 
-    public String getFlashMessage() {
-        wait.until(ExpectedConditions.presenceOfElementLocated(flashBy));
-        return driver.findElement(flashBy).getText();
-    }
 
 }

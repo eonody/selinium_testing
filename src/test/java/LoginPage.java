@@ -32,12 +32,7 @@ class LoginPage extends PageBase {
     }
 
     public boolean isLoginFormDisplayed() {
-        try {
-            wait.until(ExpectedConditions.presenceOfElementLocated(usernameBy));
-            return driver.findElement(usernameBy).isDisplayed();
-        } catch (Exception e) {
-            return false;
-        }
+        return isElementPresent(usernameBy) && driver.findElement(usernameBy).isDisplayed();
     }
 }
 

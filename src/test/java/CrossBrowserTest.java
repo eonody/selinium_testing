@@ -2,7 +2,6 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.http.ClientConfig;
@@ -51,14 +50,7 @@ public class CrossBrowserTest {
                     .config(clientConfig)
                     .build();
         } else {
-            ChromeOptions options = new ChromeOptions();
-            if (TestConfig.isHeadless()) {
-                options.addArguments("--headless");
-            }
-            options.addArguments("--window-size=1920,1080");
-            options.addArguments("--no-sandbox");
-            options.addArguments("--disable-dev-shm-usage");
-            driver = new RemoteWebDriver(new URL(hubUrl), options);
+            driver = new RemoteWebDriver(new URL(hubUrl), TestConfig.createChromeOptions());
         }
         driver.manage().window().maximize();
     }

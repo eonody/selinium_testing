@@ -17,16 +17,7 @@ class PuzzlePage extends PageBase {
     }
 
     public boolean isPuzzleBoardVisible() {
-        try {
-            wait.until(ExpectedConditions.presenceOfElementLocated(boardBy));
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public WebElement getBoard() {
-        return waitAndReturnElement(boardBy);
+        return isElementPresent(boardBy);
     }
 
     public List<WebElement> getPieces() {
@@ -52,8 +43,7 @@ class PuzzlePage extends PageBase {
     }
 
     public boolean isColorRadioSelected(String color) {
-        By locator = "black".equals(color) ? coordColorBlackBy : coordColorRandomBy;
-        return driver.findElement(locator).isSelected();
+        return getColorRadio(color).isSelected();
     }
 
     public void selectColorRadio(String color) {

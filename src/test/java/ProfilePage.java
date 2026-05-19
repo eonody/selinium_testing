@@ -29,12 +29,7 @@ class ProfilePage extends PageBase {
     }
 
     public boolean hasBioTextarea() {
-        try {
-            wait.until(ExpectedConditions.presenceOfElementLocated(bioTextareaBy));
-            return true;
-        } catch (TimeoutException e) {
-            return false;
-        }
+        return isElementPresent(bioTextareaBy);
     }
 
     public void fillRealName(String name) {

@@ -1,6 +1,7 @@
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 
 class TestConfig {
@@ -35,15 +36,22 @@ class TestConfig {
         return get("test_password", "");
     }
 
-    public static String getBrowser() {
-        return get("browser", "chrome");
-    }
-
     public static boolean isHeadless() {
         return Boolean.parseBoolean(get("headless", "false"));
     }
 
     public static String getSeleniumHubUrl() {
         return get("selenium_hub_url", "http://selenium:4444/wd/hub");
+    }
+
+    public static ChromeOptions createChromeOptions() {
+        ChromeOptions options = new ChromeOptions();
+        if (isHeadless()) {
+            options.addArguments("--headless");
+        }
+        options.addArguments("--window-size=1920,1080");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        return options;
     }
 }

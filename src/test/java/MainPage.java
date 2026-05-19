@@ -4,7 +4,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 class MainPage extends PageBase {
 
-    private By playButtonBy = By.xpath("//div[contains(@class,'site-title-nav')]//span[contains(text(),'Play')]/..");
     private By signInBy = By.xpath("//div[contains(@class, 'signin-or-signup')]//a[contains(@class,'signin')]");
     private By userMenuBy = By.xpath("//div[contains(@class,'dasher')]//button[@id='user_tag']");
     private By footerBy = By.xpath("//div[contains(@class,'lobby__about')]");
@@ -29,21 +28,11 @@ class MainPage extends PageBase {
     }
 
     public boolean isSignInVisible() {
-        try {
-            wait.until(ExpectedConditions.visibilityOfElementLocated(signInBy));
-            return true;
-        } catch (TimeoutException e) {
-            return false;
-        }
+        return isElementVisible(signInBy);
     }
 
     public boolean isUserMenuVisible() {
-        try {
-            wait.until(ExpectedConditions.visibilityOfElementLocated(userMenuBy));
-            return true;
-        } catch (TimeoutException e) {
-            return false;
-        }
+        return isElementVisible(userMenuBy);
     }
 
     public void logout() {
@@ -58,11 +47,6 @@ class MainPage extends PageBase {
     }
 
     public boolean isBodyVisible() {
-        try {
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By.tagName("body")));
-            return true;
-        } catch (TimeoutException e) {
-            return false;
-        }
+        return isElementVisible(By.tagName("body"));
     }
 }
