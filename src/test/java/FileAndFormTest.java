@@ -1,5 +1,7 @@
 import org.junit.*;
 import org.openqa.selenium.*;
+import org.openqa.selenium.remote.LocalFileDetector;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import java.io.File;
 
 
@@ -12,6 +14,8 @@ public class FileAndFormTest extends TestBase {
         analysisPage.openImportPage();
 
         Assert.assertTrue("Import page should have a file input", analysisPage.hasFileInput());
+
+        ((RemoteWebDriver) driver).setFileDetector(new LocalFileDetector());
 
         File tempPgn = File.createTempFile("test_game", ".pgn");
         tempPgn.deleteOnExit();

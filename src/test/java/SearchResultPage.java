@@ -51,7 +51,9 @@ class SearchResultPage extends PageBase {
         try {
             List<WebElement> results = driver.findElements(searchResultsBy);
             if (!results.isEmpty()) {
-                return results.get(0).getText();
+                String text = results.get(0).getText();
+                String href = results.get(0).getAttribute("href");
+                return text + " " + (href != null ? href : "");
             }
         } catch (Exception e) {
             // fall through
