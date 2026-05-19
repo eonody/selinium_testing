@@ -55,6 +55,32 @@ public class PublicPageTest extends TestBase {
         Assert.assertTrue("Puzzle page should have a chess board", puzzlePage.isPuzzleBoardVisible());
     }
 
+    // ===== EDITOR DROPDOWN TEST (public, no login required) =====
+    @Test
+    public void testEditorOpeningDropdown() {
+        EditorPage editorPage = new EditorPage(driver);
+        int optionCount = editorPage.getOpeningOptionCount();
+        Assert.assertTrue("Editor opening dropdown should have multiple options", optionCount > 1);
+
+        editorPage.selectOpeningByVisibleText("C50 Italian Game: Hungarian Defense");
+        String selectedText = editorPage.getSelectedOpeningText();
+        Assert.assertTrue("Selected opening should be Italian Game: Hungarian Defense",
+                selectedText.contains("Hungarian Defense"));
+    }
+
+    // ===== COORDINATE TRAINING RADIO BUTTON TEST (public, no login required) =====
+    @Test
+    public void testCoordinateTrainingColorRadioButtons() {
+        PuzzlePage puzzlePage = new PuzzlePage(driver);
+        puzzlePage.openCoordinateTraining();
+
+        Assert.assertTrue("Random should be selected by default", puzzlePage.isColorRadioSelected("random"));
+
+        puzzlePage.selectColorRadio("black");
+        Assert.assertTrue("Black should be selected after clicking", puzzlePage.isColorRadioSelected("black"));
+        Assert.assertFalse("Random should not be selected", puzzlePage.isColorRadioSelected("random"));
+    }
+
     // ===== MAIN PAGE FOOTER =====
     @Test
     public void testMainPageFooter() {
