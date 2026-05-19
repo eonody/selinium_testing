@@ -4,7 +4,7 @@ import org.openqa.selenium.support.ui.Select;
 
 class EditorPage extends PageBase {
 
-    private By openingDropdownBy = By.xpath("//*[@id='board-editor']/div/div[4]/select");
+    private By openingDropdownBy = By.xpath("//*[@id='board-editor']//select[contains(@class, 'positions')]");
 
     public EditorPage(WebDriver driver) {
         super(driver);
@@ -27,8 +27,4 @@ class EditorPage extends PageBase {
     public String getSelectedOpeningText() {
         return getOpeningDropdown().getFirstSelectedOption().getText();
     }
-}
-
-
-
 }
