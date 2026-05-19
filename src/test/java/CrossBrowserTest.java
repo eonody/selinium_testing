@@ -3,7 +3,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -13,9 +13,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collection;
 
-/**
- * Cross-browser testing: runs the same tests on Chrome and Firefox.
- */
+
 @RunWith(Parameterized.class)
 public class CrossBrowserTest {
 
@@ -26,7 +24,7 @@ public class CrossBrowserTest {
     public static Collection<Object[]> browsers() {
         return Arrays.asList(new Object[][]{
                 {"chrome"},
-                {"firefox"}
+                {"edge"}
         });
     }
 
@@ -38,8 +36,8 @@ public class CrossBrowserTest {
     public void setup() throws Exception {
         String hubUrl = TestConfig.getSeleniumHubUrl();
 
-        if ("firefox".equalsIgnoreCase(browserName)) {
-            FirefoxOptions options = new FirefoxOptions();
+        if ("edge".equalsIgnoreCase(browserName)) {
+            EdgeOptions options = new EdgeOptions();
             if (TestConfig.isHeadless()) {
                 options.addArguments("--headless");
             }
@@ -91,4 +89,3 @@ public class CrossBrowserTest {
         }
     }
 }
-

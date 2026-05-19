@@ -2,6 +2,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import java.util.List;
 
+
 class SearchResultPage extends PageBase {
 
     private By searchToggleBy = By.xpath("//div[@class='site-buttons']//div[@id='clinput']//a[contains(@class,'link')]");

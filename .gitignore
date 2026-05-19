@@ -1,10 +1,22 @@
-.gradle/
+# Build output
 build/
+out/
+*.class
+
+# Gradle
+.gradle/
+
+# IDE
 .idea/
 *.iml
-*.class
-out/
-downloads/
-screenshots/
+
+# Python virtual env
 .venv/
+
+# Test artifacts
+screenshots/
+downloads/
+*.log
+
+# Sensitive config
 test.properties

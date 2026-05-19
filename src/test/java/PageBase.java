@@ -5,7 +5,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import java.time.Duration;
 
 
-
 class PageBase {
     protected WebDriver driver;
     protected WebDriverWait wait;

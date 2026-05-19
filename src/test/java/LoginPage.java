@@ -1,6 +1,7 @@
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
+
 class LoginPage extends PageBase {
 
     private By usernameBy = By.xpath("//form[contains(@action,'login')]//input[@id='form3-username']");

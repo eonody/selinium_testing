@@ -1,6 +1,7 @@
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
+
 class AboutPage extends PageBase {
 
     private By headingBy = By.xpath("//main[contains(@class, 'page-menu')]//div[contains(@class,'box')]//h1");

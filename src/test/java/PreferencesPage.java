@@ -2,6 +2,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import java.util.List;
 
+
 class PreferencesPage extends PageBase {
 
     private By radioBy = By.xpath("//form[contains(@class, 'autosubmit')]//div[not(@class)]//section//input[@type='radio']");

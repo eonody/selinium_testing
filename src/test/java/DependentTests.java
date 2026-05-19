@@ -7,10 +7,7 @@ import org.testng.annotations.*;
 import java.net.URL;
 import java.time.Duration;
 
-/**
- * TestNG test class demonstrating test dependencies (dependsOnMethods).
- * These tests do NOT require login.
- */
+
 public class DependentTests {
     private WebDriver driver;
 

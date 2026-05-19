@@ -3,6 +3,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import java.util.List;
 
+
 class PuzzlePage extends PageBase {
 
     private By boardBy = By.xpath("//main//div[contains(@class,'puzzle')]//cg-board");

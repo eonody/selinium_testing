@@ -2,6 +2,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 
+
 class ReportPage extends PageBase {
 
     private By reasonDropdownBy = By.xpath("//main[contains(@class, 'report')]//select[@id='form3-reason']");
