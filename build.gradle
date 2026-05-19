@@ -13,8 +13,18 @@ dependencies {
     }
     testImplementation 'org.hamcrest:hamcrest-library:1.3'
     testImplementation "org.slf4j:slf4j-simple:2.0.16"
+    testImplementation 'org.testng:testng:7.9.0'
 }
 
 test {
     testLogging.showStandardStreams = true
+    useJUnit()
+    // Exclude TestNG tests from JUnit run
+    exclude '**/DependentTests.class'
+}
+
+task testNg(type: Test) {
+    testLogging.showStandardStreams = true
+    useTestNG()
+    include '**/DependentTests.class'
 }

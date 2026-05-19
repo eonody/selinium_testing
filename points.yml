@@ -67,7 +67,7 @@ basic:
     description: "Fill an input field (text, radio, checkbox, date, etc.) — each different type counts as one"
 
   send_form:                 # 1 pt each | repeatable | max 10
-    count: 2
+    count: 3
     description: "Submit a form (each distinct form counts as one)"
 
   static_page_test:          # 2 pts | once
@@ -154,7 +154,7 @@ advanced:
     link: "https://www.selenium.dev/documentation/webdriver/actions_api/mouse/"
 
   file_upload:               # 6 pts | once
-    done: false
+    done: true
     description: "Upload a file through a file input and verify it was uploaded"
     link: "https://www.selenium.dev/documentation/webdriver/elements/file_upload/"
 
@@ -164,7 +164,7 @@ advanced:
     link: "https://www.selenium.dev/documentation/webdriver/interactions/navigation/"
 
   test_dependencies:         # 4 pts | once
-    done: false
+    done: true
     description: "Make a test method depend on another using dependsOnMethods or dependsOnGroups — e.g. a logout test that only runs if login passed"
     link: "https://testng.org/#_test_methods_classes_and_groups"
     
@@ -200,12 +200,12 @@ advanced:
     link: "https://www.selenium.dev/documentation/webdriver/browsers/chrome/"
 
   cross_browser_testing:     # 8 pts | once
-    done: false
+    done: true
     description: "Run the same tests on multiple browsers (e.g. Chrome and Firefox) using parameterization"
     link: "https://www.selenium.dev/documentation/webdriver/browsers/"
 
   dockerized_execution:      # 4 pts | once
-    done: true
+    done: false
     description: "Run tests inside a Docker container (e.g. using docker-compose with Selenium Grid)"
     link: "https://www.selenium.dev/documentation/grid/getting_started/"
 
