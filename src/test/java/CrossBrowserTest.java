@@ -5,6 +5,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.http.ClientConfig;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -41,7 +42,14 @@ public class CrossBrowserTest {
             if (TestConfig.isHeadless()) {
                 options.addArguments("--headless");
             }
-            driver = new RemoteWebDriver(new URL(hubUrl), options);
+            ClientConfig clientConfig = ClientConfig.defaultConfig()
+                    .baseUrl(new URL(hubUrl))
+                    .readTimeout(Duration.ofSeconds(30))
+                    .connectionTimeout(Duration.ofSeconds(30));
+            driver = RemoteWebDriver.builder()
+                    .oneOf(options)
+                    .config(clientConfig)
+                    .build();
         } else {
             ChromeOptions options = new ChromeOptions();
             if (TestConfig.isHeadless()) {
